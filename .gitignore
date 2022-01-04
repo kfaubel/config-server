@@ -1,3 +1,7 @@
+
+config/*.json
+images/*
+
 # Logs
 logs
 *.log

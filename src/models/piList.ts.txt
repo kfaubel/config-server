@@ -1,0 +1,51 @@
+import path from "path";
+import fs from "fs";
+import { logger } from "src/logger";
+
+export interface PiRecord {
+    serial: string;
+    name: string;
+    ipAddr: string;
+    updated: Date;
+}
+
+export type PiList = Array<PiRecord>;
+
+
+export class PiListModel {
+
+    constructor() {
+
+    }
+
+    public getList(): PiList {
+        
+        const piList = JSON.parse(fs.readFileSync('data.json', 'utf-8'));
+        return piList
+    }
+
+    public addPi(serial: string, name: string, ipAddr: string) {
+        const piList = JSON.parse(fs.readFileSync('data.json', 'utf-8')) as PiList;
+        let updatedExisting = false;
+        for (let i = 0; i < piList.length; i++) {
+            const record = piList[i];
+            if (record.serial = serial) {
+                // Update the current record
+                record.name = name;
+                record.ipAddr = ipAddr;
+                record.updated = new Date();
+
+                logger.info("Existing record was updated");
+                updatedExisting = true;
+                break;
+            }
+        }
+
+        if (!updatedExisting) {
+            // time to add a new record
+            piList.push({serial: serial, name: name, ipAddr: ipAddr, updated: new Date()});
+        }
+
+        fs.writeFileSync("piList.json", JSON.stringify(piList, null,4));
+    }
+}

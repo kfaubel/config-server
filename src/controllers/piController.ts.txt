@@ -1,0 +1,44 @@
+import express from "express";
+import { logger } from "../logger";
+import { PiListModel } from "src/models/piList";
+import { request } from "http";
+
+// app.route("/pi-record/serial/:serial/name/:name/ip:ip")
+// params will be {}
+exports.postPi = async (req: express.Request, res: express.Response) => {
+
+    logger.info("PiController: " + req.params.serial); 
+
+    let serial = "";
+    let name = "";
+    let ip = "";
+
+    if (req.query && req.query.serial && typeof req.query.serial === "string") {
+        serial = req.query.serial;
+    } else {
+        logger.warn(`Invalid serial parameter`);
+        res.status(400).send("Invalid serial");
+        return;
+    }
+
+    if (req.query && req.query.name && typeof req.query.name === "string") {
+        name = req.query.name;
+    } else {
+        logger.warn(`Invalid name parameter`);
+        res.status(400).send("Invalid name");
+        return;
+    }
+
+    if (req.query && req.query.ip && typeof req.query.ip === "string") {
+        ip = req.query.ip;
+    } else {
+        logger.warn(`Invalid ip parameter`);
+        res.status(400).send("Invalid ip");
+        return;
+    }
+
+    const piModel = new PiListModel();
+    piModel.addPi(req.query.serial as string, req.query.name as string, req.query.ip as string);
+
+    res.status(200).send("OK");
+};

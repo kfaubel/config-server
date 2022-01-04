@@ -1,0 +1,31 @@
+import express from "express";
+import path from "path";
+import { piController } from "../controllers/piController";
+
+
+module.exports = function(app: express.Application) {
+
+    // Simple how to page
+    app.get('/', (req: express.Request, res: express.Response) => {
+        res.sendFile(path.join(__dirname + '../../../public/index.html'));
+    })
+    
+    // .../pi-record?serial=12345&name=my-pi&ip=192.168.1.133
+    app.route("/pi-record/serial/:serial/name/:name/ip:ip")
+    .post(piController.postPi);
+
+    
+};
+  // Weather Image route for lat/lon 
+  //app.route('/weather/forecast/lat/:lat/lon/:lon/title/:title/days/:days')
+  //.get(weatherController.getImageLatLon); 
+
+  // Weather Image route for lat/lon 
+  //app.route('/weather/forecast/zip/:zip/key/:key/title/:title')
+  //.get(weatherController.getImageZip); 
+
+  // Baseball Image route  
+  //app.route('/baseball/schedule/team/:team')
+  //.get(baseballController.getImage); 
+
+    
